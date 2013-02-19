@@ -67,6 +67,10 @@
 <body>
 
 <div id="container">
+	<a href="signup"><h1>登録画面へ！</h1></a>
+</div>
+
+<div id="container">
 	<h1>Welcome to CodeIgniter!</h1>
 
 	<div id="body">
