@@ -51,8 +51,6 @@ class TweetModel extends CI_Model {
     // 全てのツイートを取得。
     function getAllTweets($desc)
     {
-        $login_cond = array('email' => $email, 'password_hash' => $password_hash);
-        $query = $this->db->get_where(self::TABLE_NAME, $login_cond);
         return $query->result();
     }
 }
