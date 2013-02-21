@@ -20,15 +20,15 @@ class Login extends CI_Controller {
 		// 直前のログイン失敗メッセージ
 		$message = '';
 
-		// ログイン情報があればログイン
+		// POSTデータがあればログイン
 		if (isset($_POST['email']) && isset($_POST['password'])) {
-			$this->load->model('UserModel', 'user_model');
-			$logined = $this->user_model->login();
-			if ($logined) {
+			try {
+				$this->load->model('UserModel', 'user_model');
+				$this->user_model->login($_POST['email'], $_POST['password']);
 				redirect($redirect, 'refresh');
 				return;
-			} else {
-				$message = 'IDまたはパスワードが違います。';
+			} catch (Exception $e) {
+				$message = $e->getMessage();
 			}
 		}
 
