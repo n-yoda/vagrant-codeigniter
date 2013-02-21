@@ -4,36 +4,36 @@ class Login extends CI_Controller {
 
     function __construct()
     {
-    	parent::__construct();
-    	$this->load->helper('url');
+        parent::__construct();
+        $this->load->helper('url');
     }
 
-	public function index()
-	{
-		// リダイレクトの指定が無ければTimeLineにリダイレクト
-		$redirect = '';
-		if (isset($_POST['redirect']))
-			$redirect = $_POST['redirect'];
-		else
-			$redirect = 'timeline';
+    public function index()
+    {
+        // リダイレクトの指定が無ければTimeLineにリダイレクト
+        $redirect = '';
+        if (isset($_POST['redirect']))
+            $redirect = $_POST['redirect'];
+        else
+            $redirect = 'timeline';
 
-		// 直前のログイン失敗メッセージ
-		$message = '';
+        // 直前のログイン失敗メッセージ
+        $message = '';
 
-		// POSTデータがあればログイン
-		if (isset($_POST['email']) && isset($_POST['password'])) {
-			try {
-				$this->load->model('UserModel', 'user_model');
-				$this->user_model->login($_POST['email'], $_POST['password']);
-				redirect($redirect, 'refresh');
-				return;
-			} catch (Exception $e) {
-				$message = $e->getMessage();
-			}
-		}
+        // POSTデータがあればログイン
+        if (isset($_POST['email']) && isset($_POST['password'])) {
+            try {
+                $this->load->model('UserModel', 'userModel');
+                $this->userModel->login($_POST['email'], $_POST['password']);
+                redirect($redirect, 'refresh');
+                return;
+            } catch (Exception $e) {
+                $message = $e->getMessage();
+            }
+        }
 
-		$params = array('redirect' => $redirect, 'message' => $message);
-		$this->load->view('login_view', $params);
-	}
+        $params = array('redirect' => $redirect, 'message' => $message);
+        $this->load->view('login_view', $params);
+    }
 
 }

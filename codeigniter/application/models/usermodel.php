@@ -1,6 +1,7 @@
 <?php
 
-class UserModel extends CI_Model {
+class UserModel extends CI_Model
+{
 
     const TABLE_NAME = 'users';
 
@@ -18,29 +19,29 @@ class UserModel extends CI_Model {
         // テーブルが無ければ作る。
         if (!$this->db->table_exists(self::TABLE_NAME))
         {
-            $this->_create_table();
+            $this->createTable();
         }
     }
 
     // テーブルを新規作成
-    private function _create_table()
+    private function createTable()
     {
         $this->load->dbforge();
 
         $fields = array(
-            'id' => array('type' => 'INT', 'unsigned' => TRUE, 'auto_increment' => TRUE),
+            'id' => array('type' => 'INT', 'unsigned' => true, 'auto_increment' => true),
             'email' => array('type' => 'VARCHAR', 'constraint' => '256'),
             'username' => array('type' =>'VARCHAR', 'constraint' => '64'),
             'password_hash' => array('type' => 'VARCHAR', 'constraint' => '64'),
             'register_date' => array('type' => 'DATETIME')
         );
         $this->dbforge->add_field($fields);
-        $this->dbforge->add_key('id', TRUE);
+        $this->dbforge->add_key('id', true);
         $this->dbforge->create_table(self::TABLE_NAME);
     }
 
     // ユーザーを追加してユーザ情報を返す
-    function add_user($email, $username, $password)
+    function addUser($email, $username, $password)
     {
         // emailアドレスがログインIDなので重複チェック
         $count = $this->db->from(self::TABLE_NAME)->where('email', $email)->count_all_results();

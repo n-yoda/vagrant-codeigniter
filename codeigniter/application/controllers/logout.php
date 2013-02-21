@@ -4,23 +4,23 @@ class Logout extends CI_Controller {
 
     function __construct()
     {
-    	parent::__construct();
-    	$this->load->helper('url');
+        parent::__construct();
+        $this->load->helper('url');
     }
 
-	public function index()
-	{
-		// リダイレクトの指定が無ければLoginにリダイレクト
-		$redirect = '';
-		if (isset($_POST['redirect']))
-			$redirect = $_POST['redirect'];
-		else
-			$redirect = 'login';
+    public function index()
+    {
+        // リダイレクトの指定が無ければLoginにリダイレクト
+        $redirect = '';
+        if (isset($_POST['redirect']))
+            $redirect = $_POST['redirect'];
+        else
+            $redirect = 'login';
 
-		// ログアウト
-		$this->load->model('UserModel', 'user_model');
-		$this->user_model->logout();
-		redirect($redirect, 'refresh');
-	}
+        // ログアウト
+        $this->load->model('UserModel', 'userModel');
+        $this->userModel->logout();
+        redirect($redirect, 'refresh');
+    }
 
 }
