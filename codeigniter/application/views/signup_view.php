@@ -5,19 +5,22 @@
 	<title>ユーザー登録</title>
 </head>
 <body>
-	<h2>ユーザー登録</h2>
 	<?php $this->load->helper('form'); ?>
-	<?php echo form_open('adduser'); ?>
-	メールアドレス
-	<?php echo form_input('email', 'nobuki.y@gmail.com'); ?>
-	<br/>
-	表示名
-	<?php echo form_input('username', 'よだ'); ?>
-	<br/>
-	パスワード
-	<?php echo form_password('password', '1456'); ?>
-	<br/>
-	<?php echo form_submit('submit', '登録'); ?>
-	<?php echo form_close(); ?>
+	<?= form_open('signup') ?>
+		<h2>ユーザー登録</h2>
+		<?php echo (empty($message) ? '' : "$message <br/>"); ?>
+		メールアドレス
+		<?= form_input('email', '') ?>
+		<br/>
+		表示名
+		<?= form_input('username', '') ?>
+		<br/>
+		パスワード
+		<?= form_password('password', '') ?>
+		<br/>
+		<?= form_submit('submit', '登録') ?>
+	<?= form_close() ?>
+
+	<p><a href="login">ログイン画面に戻る</a></p>
 </body>
 </html>

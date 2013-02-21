@@ -5,20 +5,21 @@
 	<title>ログイン</title>
 </head>
 <body>
-	<h2>ログイン</h2>
 	<?php $this->load->helper('form'); ?>
-	<?php echo form_open('login'); ?>
-	メールアドレス
-	<?php echo form_input('email', ''); ?>
-	<br/>
-	パスワード
-	<?php echo form_password('password', ''); ?>
-	<br/>
-	<?php echo $message . '<br/>'; ?>
-	<?php echo form_submit('submit', 'ログイン'); ?>
-	<?php 
-		echo form_hidden('redirect', $redirect);
-		echo form_close();
-	?>
+	
+	<?= form_open('login') ?>
+		<h2>ログイン</h2>
+		<?php echo (empty($message) ? '' : "$message <br/>"); ?>
+		メールアドレス
+		<?= form_input('email', '') ?>
+		<br/>
+		パスワード
+		<?= form_password('password', '') ?>
+		<br/>
+		<?= form_submit('submit', 'ログイン') ?>
+		<?= form_hidden('redirect', $redirect) ?>
+	<?= form_close() ?>
+	
+	<p><a href="signup"> もしくは新規登録</a></p>
 </body>
 </html>
