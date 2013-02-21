@@ -1,11 +1,14 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Login extends CI_Controller {
+class Login extends CI_Controller
+{
 
     function __construct()
     {
         parent::__construct();
-        $this->load->helper('url');
+        $this->load->helper(array('url', 'form'));
+        $this->load->model('UserModel', 'userModel');
+        $this->load->library('form_validation');
     }
 
     public function index()
@@ -17,23 +20,31 @@ class Login extends CI_Controller {
         else
             $redirect = 'timeline';
 
-        // 直前のログイン失敗メッセージ
-        $message = '';
+        // エラー出力のスタイル
+        $this->form_validation->set_error_delimiters('<div class="error">', '</div>');
 
-        // POSTデータがあればログイン
-        if (isset($_POST['email']) && isset($_POST['password'])) {
-            try {
-                $this->load->model('UserModel', 'userModel');
-                $this->userModel->login($_POST['email'], $_POST['password']);
-                redirect($redirect, 'refresh');
-                return;
-            } catch (Exception $e) {
-                $message = $e->getMessage();
-            }
+        // 検証（ログインも同時に行う）
+        $v = $this->form_validation;
+        $v->set_rules('email', 'メールアドレス', 'trim|required|valid_email');
+        $v->set_rules('password', 'パスワード', 'trim|required|callback_login');
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->load->view('login_view');
+        } else {
+            redirect($redirect);
         }
+    }
 
-        $params = array('redirect' => $redirect, 'message' => $message);
-        $this->load->view('login_view', $params);
+    // バリデーター用のログインコールバック
+    function login($password)
+    {
+        $email = $this->input->post('email');
+        if ($this->userModel->login($email, $password)) {
+            return true;
+        } else {
+            $this->form_validation->set_message('login', 'メールアドレスまたはパスワードが違います。');
+            return false;
+        }
     }
 
 }

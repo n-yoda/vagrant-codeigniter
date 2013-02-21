@@ -5,18 +5,23 @@
     <title>ユーザー登録</title>
 </head>
 <body>
-    <?php $this->load->helper('form'); ?>
     <?= form_open('signup') ?>
         <h2>ユーザー登録</h2>
-        <?php echo (empty($message) ? '' : "$message <br/>"); ?>
         メールアドレス
-        <?= form_input('email', '') ?>
+        <?= form_error('email') ?>
+        <?= form_input('email', set_value('email')) ?>
         <br/>
         表示名
-        <?= form_input('username', '') ?>
+        <?= form_error('username') ?>
+        <?= form_input('username', set_value('username'), 'maxlength="64"') ?>
         <br/>
         パスワード
-        <?= form_password('password', '') ?>
+        <?= form_error('password') ?>
+        <?= form_password('password', set_value('password')) ?>
+        <br/>
+        パスワード確認
+        <?= form_error('passconf') ?>
+        <?= form_password('passconf', set_value('passconf')) ?>
         <br/>
         <?= form_submit('submit', '登録') ?>
     <?= form_close() ?>

@@ -40,15 +40,9 @@ class UserModel extends CI_Model
         $this->dbforge->create_table(self::TABLE_NAME);
     }
 
-    // ユーザーを追加してユーザ情報を返す
+    // ユーザーを追加する
     function addUser($email, $username, $password)
     {
-        // emailアドレスがログインIDなので重複チェック
-        $count = $this->db->from(self::TABLE_NAME)->where('email', $email)->count_all_results();
-        if ($count > 0) {
-            throw new Exception("メールアドレスが既に使用されています。");
-        }
- 
         $this->email = $email;
         $this->username = $username;
         $this->password_hash = do_hash($password);
@@ -59,8 +53,15 @@ class UserModel extends CI_Model
         return $this;
     }
 
-    // ログインしてユーザ情報を返す
-    // セキュリティ的にはpassword_hashとかも保存しとくべき？
+    // 既にメールアドレスが使われているかどうかチェック
+    function isEmailUsed($email)
+    {
+        $query = $this->db->from(self::TABLE_NAME)->where('email', $email);
+        $count = $query->count_all_results();
+        return $count > 0;
+    }    
+
+    // ログイン出来たらtrueを返す
     function login($email, $password)
     {
         $password_hash = do_hash($password);
@@ -73,9 +74,10 @@ class UserModel extends CI_Model
             $user = $users[0];
             $login_data = array('user_id' => $user->id);
             $this->session->set_userdata($login_data);
-            return $user;
+            return true;
+        } else {
+            return false;
         }
-        throw new Exception("メールアドレスまたはパスワードが違います。");
     }
 
     // ログアウト
@@ -83,4 +85,5 @@ class UserModel extends CI_Model
     {
         $this->session->unset_userdata('user_id');
     }
+
 }
