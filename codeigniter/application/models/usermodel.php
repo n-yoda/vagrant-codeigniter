@@ -53,6 +53,13 @@ class UserModel extends CI_Model
         return $this;
     }
 
+    // ユーザーの情報を取得
+    function getUser($id)
+    {
+        $users = $this->db->get_where(self::TABLE_NAME, array('id' => $id))->result();
+        return $users[0];
+    }
+
     // 既にメールアドレスが使われているかどうかチェック
     function isEmailUsed($email)
     {

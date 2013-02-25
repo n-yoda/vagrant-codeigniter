@@ -1,23 +1,24 @@
 <?php
+require_once('usermodel.php');
 
 class TweetModel extends CI_Model {
 
     const TABLE_NAME = 'tweets';
 
-    public $id = NULL;
+    public $tweet_id = NULL;
     public $user_id = '';
+    public $username = '';
     public $text = '';
-    public $register_date = '';
+    public $date = '';
 
     function __construct()
     {
         parent::__construct();
-        $this->load->helper('security');
 
         // テーブルが無ければ作る。
         if (!$this->db->table_exists(self::TABLE_NAME))
         {
-            createTable();
+            $this->createTable();
         }
     }
 
@@ -26,31 +27,53 @@ class TweetModel extends CI_Model {
     {
         $this->load->dbforge();
         $fields = array(
-            'id' => array('type' => 'INT', 'unsigned' => true, 'auto_increment' => true),
+            'tweet_id' => array('type' => 'INT', 'unsigned' => true, 'auto_increment' => true),
             'user_id' => array('type' => 'INT', 'unsigned' => true),
             'text' => array('type' =>'VARCHAR', 'constraint' => '140'),
             'register_date' => array('type' => 'DATETIME')
         );
         $this->dbforge->add_field($fields);
-        $this->dbforge->add_key('id', true);
+        $this->dbforge->add_key('tweet_id', true);
         $this->dbforge->create_table(self::TABLE_NAME);
     }
 
-    // ツイートを追加してツイートデータを返す
+    // ツイートを追加して成功したらtrueを返す
     function addTweet($user_id, $text)
-    { 
-        $this->user_id = $user_id;
-        $this->text = $text;
-        $this->register_date = date("Y-m-d H:i:s", time());
-
-        $this->db->insert(self::TABLE_NAME, $this);
-        $this->id = $this->db->insert_id();
-        return $this;
+    {
+        $tweet = array(
+            'user_id' => $user_id,
+            'text' => $text,
+            'register_date' => date("Y-m-d H:i:s", time()),
+        );
+        $this->db->insert(self::TABLE_NAME, $tweet);
+        return true;
     }
 
-    // 全てのツイートを取得。
-    function getAllTweets($desc)
+    // 全てのツイートを取得。クエリを返す。
+    function getTweets($count, $desc = true, $idWhere = '')
     {
-        return $query->result();
+        $userTable = UserModel::TABLE_NAME;
+        $tweetTable = self::TABLE_NAME;
+        $this->db->select("tweet_id, user_id, text, {$tweetTable}.register_date as date, username");
+        if (!empty($idWhere))
+            $this->db->where($idWhere);
+        $this->db->from($tweetTable);
+        $this->db->join($userTable, "{$userTable}.id = {$tweetTable}.user_id", 'inner');
+        $this->db->order_by('tweet_id', $desc ? 'desc' : 'asc');
+        $this->db->limit($count);
+
+        return $this->db->get();
+    }
+
+    // 指定したidより古いツイートを取得。
+    function getOlderTweets($id, $count, $desc = true)
+    {
+        return $this->getTweets($count, $desc, "tweet_id < {$id}");
+    }
+
+    // 指定したidより新しいツイートを取得。
+    function getNewerTweets($id, $count, $desc = true)
+    {
+        return $this->getTweets($count, $desc, "tweet_id > {$id}");
     }
 }
