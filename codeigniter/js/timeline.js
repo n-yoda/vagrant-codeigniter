@@ -115,7 +115,7 @@ function getOlderTweets()
         url: 'timeline/older_tweets',
         type: 'POST',
         data: {'id': id},
-        success: function(tweets){insertTweets(tweets, oldest, true);},
+        success: function(tweets){insertTweets(tweets, oldest, false);},
         complete: function(){isLoading = false;}
     });
 }

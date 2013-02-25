@@ -39,7 +39,7 @@ class TimeLine extends CI_Controller
         $this->form_validation->set_rules('text', 'ツイート内容', 'trim|required|xss_clean');
 
         if ($this->form_validation->run() == false) {
-            $this->output->set_status_header('400', validation_errors());
+            $this->output->set_status_header('400', $this->form_validation->error_string());
         } else if (!$this->session->userdata('user_id')) {
             $this->output->set_status_header('401', 'ログインしてください。');
         } else {
@@ -49,6 +49,8 @@ class TimeLine extends CI_Controller
             $this->output->set_output("ツイートを投稿しました。");
         }
     }
+
+    // ToDo この下の２つはまとめるべきでは？
 
     // 指定したtweet_idより新しいツイートを取得
     public function newer_tweets()
