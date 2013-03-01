@@ -11,8 +11,8 @@
 
     <div class="menu">
         <?php if($login): ?>
-            <div class="menu_item"><?= $user->username ?></div>
-            <div class="menu_item"><?= $user->email ?></div>
+            <div class="menu_item"><?= htmlspecialchars($user->username) ?></div>
+            <div class="menu_item"><?= htmlspecialchars($user->email) ?></div>
             <a href="logout"><div class="menu_item white_button">ログアウト</div></a>
         <?php else: ?>
             <div class="menu_item">ログインしていません。</div>
@@ -33,9 +33,9 @@
     <div class="tweets" id="tweets">
         <?php foreach($tweets as $tweet): ?>
             <div class="tweet white_button" id="<?= $tweet->tweet_id ?>">
-                <div class="username"><?= $tweet->username ?></div>
-                <div class="text"><?= $tweet->text ?></div>
-                <div class="date"><?= $tweet->date ?></div>
+                <div class="username"><?= htmlspecialchars($tweet->username) ?></div>
+                <div class="text"><?= htmlspecialchars($tweet->text) ?></div>
+                <div class="date"><?= htmlspecialchars($tweet->date) ?></div>
             </div>
         <?php endforeach; ?>
     </div>
