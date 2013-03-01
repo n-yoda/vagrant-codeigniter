@@ -18,7 +18,6 @@
         <br/>
 
         <?= form_submit('submit', 'ログイン') ?>
-        <?= form_hidden('redirect', set_value('redirect', 'timeline')) ?>
     <?= form_close() ?>
     
     <p><a href="signup"> もしくは新規登録</a></p>

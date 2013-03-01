@@ -13,13 +13,6 @@ class Login extends CI_Controller
 
     public function index()
     {
-        // リダイレクトの指定が無ければTimeLineにリダイレクト
-        $redirect = '';
-        if (isset($_POST['redirect']))
-            $redirect = $_POST['redirect'];
-        else
-            $redirect = 'timeline';
-
         // エラー出力のスタイル
         $this->form_validation->set_error_delimiters('<div class="error">', '</div>');
 
@@ -31,12 +24,12 @@ class Login extends CI_Controller
         if ($this->form_validation->run() == FALSE) {
             $this->load->view('login_view');
         } else {
-            redirect($redirect);
+            redirect('timeline');
         }
     }
 
     // バリデーター用のログインコールバック
-    function login($password)
+    public function login($password)
     {
         $email = $this->input->post('email');
         if ($this->userModel->login($email, $password)) {
