@@ -18,7 +18,7 @@ class Signup extends CI_Controller {
         // 検証
         $v = $this->form_validation;
         $v->set_rules('email', 'メールアドレス', 'trim|required|valid_email|max_length[256]|callback_emailDuplicate');
-        $v->set_rules('username', '表示名', 'trim|required|min_length[1]|max_length[64]|xss_clean');
+        $v->set_rules('username', '表示名', 'trim|required|alpha_dash|max_length[64]');
         $v->set_rules('password', 'パスワード', 'trim|required|min_length[4]|matches[passconf]');
         $v->set_rules('passconf', 'パスワードの確認', 'trim|required');
         
@@ -34,7 +34,9 @@ class Signup extends CI_Controller {
                 $this->userModel->addUser($email, $username, $password);
                 $this->load->view('signup_succeed');
             } catch (Exception $e) {
+                // テストとして生のエラーを出力するが、基本的にエラーはユーザーに出力してはいけない。
                 $this->load->view('signup_failed', array('error' => $e));
+                log_message('error', '変数に値が含まれていませんでした');
             }
         }
     }
