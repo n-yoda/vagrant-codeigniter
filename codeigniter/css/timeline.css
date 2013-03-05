@@ -12,6 +12,13 @@ body{
 }
 .white_button:active{
     background: #eeeeee;
+    color: gray;
+}
+.white_button:visited{
+    color: #000000;
+}
+.white_button:link{
+    color: #000000;
 }
 
 /* メッセージボックス */
@@ -37,19 +44,6 @@ body{
     border: 1px solid gray;
     border-radius: 5px;
     display: inline-block;
-}
-
-/* リンクのデフォルトカラーを解除 */
-a:link{
-    color: #000000;
-    text-decoration: none;
-}
-a:visited{
-    color: #000000;
-    text-decoration: none;
-}
-a:active{
-    color: #000000;
     text-decoration: none;
 }
 
