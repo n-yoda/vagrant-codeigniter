@@ -10,17 +10,10 @@ class Logout extends CI_Controller {
 
     public function index()
     {
-        // リダイレクトの指定が無ければLoginにリダイレクト
-        $redirect = '';
-        if (isset($_POST['redirect']))
-            $redirect = $_POST['redirect'];
-        else
-            $redirect = 'login';
-
         // ログアウト
         $this->load->model('UserModel', 'userModel');
         $this->userModel->logout();
-        redirect($redirect, 'refresh');
+        redirect('login', 'refresh');
     }
 
 }
