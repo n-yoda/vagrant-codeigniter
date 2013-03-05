@@ -49,14 +49,16 @@ class TweetModel extends CI_Model {
         return true;
     }
 
-    // 全てのツイートを取得。クエリを返す。
-    function getTweets($count, $desc = true, $idWhere = '')
+    // ツイートの取得。
+    // tweet_id $compare $id という条件で探す。
+    function getTweets($count, $desc = true, $id = '', $compare = '=')
     {
         $userTable = UserModel::TABLE_NAME;
         $tweetTable = self::TABLE_NAME;
         $this->db->select("tweet_id, user_id, text, {$tweetTable}.register_date as date, username");
-        if (!empty($idWhere))
-            $this->db->where($idWhere);
+        if (!empty($id)) {
+            $this->db->where(tweet_id . ' ' . $compare, $id);
+        }
         $this->db->from($tweetTable);
         $this->db->join($userTable, "{$userTable}.id = {$tweetTable}.user_id", 'inner');
         $this->db->order_by('tweet_id', $desc ? 'desc' : 'asc');
@@ -68,12 +70,12 @@ class TweetModel extends CI_Model {
     // 指定したidより古いツイートを取得。
     function getOlderTweets($id, $count, $desc = true)
     {
-        return $this->getTweets($count, $desc, "tweet_id < {$id}");
+        return $this->getTweets($count, $desc, $id, '<');
     }
 
     // 指定したidより新しいツイートを取得。
     function getNewerTweets($id, $count, $desc = true)
     {
-        return $this->getTweets($count, $desc, "tweet_id > {$id}");
+        return $this->getTweets($count, $desc, $id, '>');
     }
 }
