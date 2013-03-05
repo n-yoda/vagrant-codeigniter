@@ -93,4 +93,25 @@ class UserModel extends CI_Model
         $this->session->unset_userdata('user_id');
     }
 
+    // ログイン済みかどうか
+    function isLoggedIn()
+    {
+        return $this->getLoggedInUserId() != false;
+    }
+
+    // ログイン済みのユーザーデータを返す
+    function getLoggedInUser()
+    {
+        if($this->isLoggedIn())
+            return $this->getUser($this->getLoggedInUserId());
+        else
+            return null;
+    }
+
+    // ログイン済みのIDを返す
+    function getLoggedInUserId()
+    {
+        return $this->session->userdata('user_id');
+    }
+
 }

@@ -12,7 +12,7 @@
     <div id="message"></div>
 
     <div class="menu">
-        <?php if($login): ?>
+        <?php if($user != null): ?>
             <div class="menu_item"><?= htmlspecialchars($user->username) ?></div>
             <div class="menu_item"><?= htmlspecialchars($user->email) ?></div>
             <a href="logout" class="menu_item white_button">ログアウト</a>
@@ -22,7 +22,7 @@
         <?php endif; ?>
     </div>
 
-    <?php if($login): ?>
+    <?php if($user != null): ?>
         <?= form_open('timeline/tweet', array('id' => 'tweet_form')) ?>
             <div class="tweet_text">
                 <?= form_textarea('text', '', 'maxlength="140" placeholder="ツイートする。（Shift+Returnで改行）"') ?>

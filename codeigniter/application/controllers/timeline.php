@@ -14,10 +14,7 @@ class TimeLine extends CI_Controller
     public function index()
     {
         // ログイン情報
-        $login = $this->session->userdata('user_id');
-        $user = null;
-        if ($login)
-            $user = $this->userModel->getUser($this->session->userdata('user_id'));
+        $user =$this->userModel->getLoggedInUser();
 
         //ツイートを取得
         $tweets = $this->tweetModel->getTweets(10)->result();
@@ -27,7 +24,7 @@ class TimeLine extends CI_Controller
         $prototype->tweet_id = 'prototype';
         array_unshift($tweets, $prototype);
 
-        $data = array('tweets' => $tweets, 'login' => $login, 'user' => $user);
+        $data = array('tweets' => $tweets, 'user' => $user);
         $this->load->view('timeline_view', $data);
     }
 
@@ -64,6 +61,8 @@ class TimeLine extends CI_Controller
     // 指定したtweet_idより古いツイートを取得
     public function older_tweets()
     {
+        // インディケーター回したいのでわざと遅延ｗｗ
+        sleep(2);
         $id = $this->input->post('id');
         $tweets = array();
         if(!empty($id))
