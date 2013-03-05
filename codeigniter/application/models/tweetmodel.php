@@ -57,7 +57,7 @@ class TweetModel extends CI_Model {
         $tweetTable = self::TABLE_NAME;
         $this->db->select("tweet_id, user_id, text, {$tweetTable}.register_date as date, username");
         if (!empty($id)) {
-            $this->db->where(tweet_id . ' ' . $compare, $id);
+            $this->db->where('tweet_id ' . $compare, $id);
         }
         $this->db->from($tweetTable);
         $this->db->join($userTable, "{$userTable}.id = {$tweetTable}.user_id", 'inner');
