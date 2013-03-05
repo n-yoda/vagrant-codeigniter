@@ -34,9 +34,9 @@ class Signup extends CI_Controller {
                 $this->userModel->addUser($email, $username, $password);
                 $this->load->view('signup_succeed');
             } catch (Exception $e) {
-                // テストとして生のエラーを出力するが、基本的にエラーはユーザーに出力してはいけない。
-                $this->load->view('signup_failed', array('error' => $e));
-                log_message('error', '変数に値が含まれていませんでした');
+                // ユーザーには「予期せぬエラー」とだけ表示する。
+                $this->load->view('signup_failed');
+                log_message('error', $e->getMessage());
             }
         }
     }
