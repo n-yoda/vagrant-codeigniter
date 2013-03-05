@@ -1,4 +1,9 @@
 /* 共通 */
+body{
+    max-width: 640pt;
+    margin: 0 auto;
+    margin-top: 1em;
+}
 .white_button{
     background: #ffffff;
 }
@@ -8,39 +13,60 @@
 .white_button:active{
     background: #eeeeee;
 }
+
+/* メッセージボックス */
+#message{
+    position: absolute;
+    text-align: center;
+    padding: 10px;
+    font-size: large;
+    color: gray;
+    background: #ffffff;
+    box-shadow: 0px 0px 100px 100px #ffffff;
 }
 
 /* メニュー */
 .menu{
-    margin-bottom: 2em;
-    height: 2em;
+    overflow: hidden;
+    margin: 5px 5px 5px 5px;
+    width: 100%;
 }
-
-.menu_item{
-    height: 100%;
+.menu > .menu_item{
     padding: 10px;
     font-size: large;
     border: 1px solid gray;
     border-radius: 5px;
-    float: left;
-    margin: 5px;
+    display: inline-block;
+}
+
+/* リンクのデフォルトカラーを解除 */
+a:link{
+    color: #000000;
+    text-decoration: none;
+}
+a:visited{
+    color: #000000;
+    text-decoration: none;
+}
+a:active{
+    color: #000000;
+    text-decoration: none;
 }
 
 /* ツイート送信フォーム */
 .tweet_text{
-    margin-left: 5px;
-    margin-right: 15px;
+    margin: 5px 15px 0px 5px;
 }
 .tweet_text > textarea{
     font-size: medium;
     border: 2px solid gray;
     border-radius: 5px;
     width: 100%;
+    margin: 0;
 }
 
 .tweet_submit{
-    margin: 5px;
-    margin-bottom: 10px;
+    margin: 0px 5px 10px 5px;
 }
 .tweet_submit > input{
     width: 100%;
@@ -60,7 +86,6 @@
 
 /* ツイート一覧 */
 .tweets{
-    clear: both;
 }
 .tweet{
     border: 1px solid gray;
@@ -79,7 +104,7 @@
 }
 .tweet > .text {
     color: #000000;
-    font-size: medium;
+    font-size: large;
     margin: 5px;
 }
 .tweet > .date {
@@ -87,6 +112,6 @@
     font-size: x-small;
     margin: 5px;
 }
-#load_trigger {
-    height: 3em;
+#load_trigger > div {
+    margin: 10px auto;
 }

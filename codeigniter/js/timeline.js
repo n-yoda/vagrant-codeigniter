@@ -1,14 +1,19 @@
 
 // 初期化
 $(document).ready(function(){
-    setInterval(getNewerTweets, 5000);
-    tweetForm = $("#tweet_form");
-    tweetText = $(".tweet_text > textarea");
+    tweetForm = $('#tweet_form');
+    tweetText = $('.tweet_text > textarea');
     tweetPrototype = $('#prototype');
-    loadTrigger = $('#load_trigger');
+    loadTrigger = $('#load_trigger').hide();
+    messageBox = $('#message').hide();
 
-    //読み込みは同時に1つしか発生しないように
+    // 自動更新の開始
+    setInterval(getNewerTweets, 5000);
+
+    // ローディング中かどうか
     isLoading = false;
+    // サーバーから返ってくるツイート数が0ならこれ以上読込しようとしない
+    dontLoadMore = false;
 
     // エンターキーで送信、[alt|shift] + enterで改行
     tweetText.keypress(function(e) {
@@ -31,7 +36,7 @@ $(document).ready(function(){
             url: tweetForm.attr('action'),
             type: tweetForm.attr('method'),
             data: {'text': tweetText.val()},
-            error: handleTweetError,
+            error: handleAjaxError,
             success: function(result){
                 tweetText.val('');
                 getNewerTweets();
@@ -51,15 +56,18 @@ $(document).ready(function(){
     });
 });
 
-// ツイート失敗時のメッセージ
-function handleTweetError(xmlHttpRequest, textStatus, errorThrown){
-    showMessage(errorThrown.message);
+// 通信失敗時のメッセージ
+function handleAjaxError(xmlHttpRequest, textStatus, errorThrown){
+    showMessage(errorThrown);
 }
 
 // トースト型のメッセージを表示
-function showMessage($message){
-    //ToDo: アラート以外に置き換える
-    alert($message);
+function showMessage(message){
+    messageBox.text(message);
+    var left = $(window).scrollLeft() + $(window).width() / 2 - messageBox.width() / 2;
+    var top = $(window).scrollTop() + $(window).height() / 2 - messageBox.height() / 2;
+    messageBox.css({left: left, top: top});
+    messageBox.fadeIn().delay(2000).fadeOut();
 }
 
 // afterの後にtweetsを追加
@@ -74,10 +82,8 @@ function insertTweets(tweets, after, animated)
         clone.find('.text').text(tweet.text);
         clone.find('.date').text(tweet.date);
         clone.insertAfter(before);
-        if(animated) {
-            clone.hide();
-            clone.animate({height:'show', opacity:'show'});
-        }
+        clone.hide();
+        clone.animate(animated ? {height:'show', opacity:'show'} : {opacity:'show'});
         before = clone;
     }
 }
@@ -97,14 +103,17 @@ function getNewerTweets()
         type: 'POST',
         data: {'id': id},
         success: function(tweets){insertTweets(tweets, tweetPrototype, true);},
-        complete: function(){isLoading = false;}
+        complete: function(){isLoading = false;},
+        error: handleAjaxError
     });
 }
 
 // 過去のツイートを取得
 function getOlderTweets()
 {
-    if (isLoading) return;
+    if (isLoading || dontLoadMore) return;
+
+    loadTrigger.show();
     var oldest = $('.tweet:last');
     var id = 4294967295;    //MYSQL_MAX_UNSIGNED_INT
     if ($.isNumeric(oldest.attr('id')))
@@ -115,8 +124,17 @@ function getOlderTweets()
         url: 'timeline/older_tweets',
         type: 'POST',
         data: {'id': id},
-        success: function(tweets){insertTweets(tweets, oldest, false);},
-        complete: function(){isLoading = false;}
+        success: function(tweets){
+            if (tweets.length == 0)
+                dontLoadMore = true;
+            else
+                insertTweets(tweets, oldest, false);
+        },
+        complete: function(){
+            loadTrigger.hide();
+            isLoading = false;
+        },
+        error: handleAjaxError
     });
 }
 
