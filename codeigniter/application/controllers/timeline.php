@@ -2,6 +2,11 @@
 
 class TimeLine extends CI_Controller
 {
+    // はじめに読み込むツイート数
+    const DEFAULT_TWEET_COUNT = 10;
+    // ツイート取得の最大数。
+    const LOAD_TWEET_COUNT_MAX = 10;
+
     function __construct()
     {
         parent::__construct();
@@ -17,7 +22,7 @@ class TimeLine extends CI_Controller
         $user =$this->userModel->getLoggedInUser();
 
         //ツイートを取得
-        $tweets = $this->tweetModel->getTweets(10)->result();
+        $tweets = $this->tweetModel->getTweets(self::DEFAULT_TWEET_COUNT)->result();
 
         // 先頭にプロトタイプ用のデータを付け加える
         $prototype = new TweetModel();
@@ -52,9 +57,10 @@ class TimeLine extends CI_Controller
     public function newer_tweets()
     {
         $id = $this->input->post('id');
+        $count = $this->getCount();
         $tweets = array();
         if(!empty($id))
-            $tweets = $this->tweetModel->getNewerTweets($id, 10)->result_array();
+            $tweets = $this->tweetModel->getNewerTweets($id, $count)->result_array();
         $this->outputArrayToJson($tweets);
     }
 
@@ -63,12 +69,25 @@ class TimeLine extends CI_Controller
     {
         // インディケーター回したいのでわざと遅延ｗｗ
         sleep(2);
+
         $id = $this->input->post('id');
+        $count = $this->getCount();
         $tweets = array();
         if(!empty($id))
-            $tweets = $this->tweetModel->getOlderTweets($id, 10)->result_array();
+            $tweets = $this->tweetModel->getOlderTweets($id, $count)->result_array();
         $this->outputArrayToJson($tweets);
     }
+
+    private function getCount()
+    {
+        $count = $this->input->post('count');
+        if ($count == null || $count > self::LOAD_TWEET_COUNT_MAX)
+        {
+            return self::LOAD_TWEET_COUNT_MAX;
+        }
+        return $count;
+    }
+
 
     // tweet取得の共通部分
     private function outputArrayToJson($array)

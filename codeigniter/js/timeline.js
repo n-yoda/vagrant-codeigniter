@@ -1,4 +1,7 @@
 
+//　定数
+var MYSQL_MAX_UNSIGNED_INT = 4294967295;
+
 // 初期化
 $(document).ready(function(){
     tweetForm = $('#tweet_form');
@@ -115,7 +118,7 @@ function getOlderTweets()
 
     loadTrigger.show();
     var oldest = $('.tweet:last');
-    var id = 4294967295;    //MYSQL_MAX_UNSIGNED_INT
+    var id = MYSQL_MAX_UNSIGNED_INT;
     if ($.isNumeric(oldest.attr('id')))
         id = oldest.attr('id');
     isLoading = true;
