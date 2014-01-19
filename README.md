@@ -1,3 +1,12 @@
+CodeIgniterで作ったTwitter風のWebサービス
+======================
+研修目的で、https://github.com/tayasu/vagrant-codeigniter をフォークして作ったもの。
+
+既知の問題点
+------------------
+* パスワードを平文で送信・・・
+
+
 VagrantとCodeIgniter
 ======================
 
